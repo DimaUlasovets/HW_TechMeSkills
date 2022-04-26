@@ -1,0 +1,71 @@
+# Create database
+
+create database tms;
+
+# Create Table Student
+
+create table student (
+id serial primary key,
+first_name varchar(20),
+last_name varchar(30),
+age integer,
+address varchar(50),
+gender varchar
+);
+
+# Create table Audience
+
+create table audience (
+id serial primary key, 
+num_audience integer
+);
+
+# Create many-to-many field
+
+create table student_audience(
+student_id integer references student (id) on update cascade on delete cascade,
+audience_id integer references audience (id) on update cascade on delete cascade);
+
+
+# Insert data in table student
+
+insert into student (first_name, last_name, age, address, gender) values ('Dima', 'Ulasovets', 23, 'Kalvariyskaja', 'm');
+
+insert into student (first_name, last_name, age, address, gender) values ('Stas', 'Kravchenko', 23, 'Moskvina', 'm');
+
+insert into student (first_name, last_name, age, address, gender) values ('Vova', 'Kuntysh', 27, 'Vinnickaja', 'm');
+
+insert into student (first_name, last_name, age, address, gender) values ('Olya', 'Puzyrenko', 23, 'Sedih', 'f');
+
+
+# Insert data in table audience
+
+insert into audience (num_audience) values (1);
+
+insert into audience (num_audience) values (2);
+
+insert into audience (num_audience) values (3);
+
+insert into audience (num_audience) values (4);
+
+insert into audience (num_audience) values (5);
+
+insert into audience (num_audience) values (6);
+
+
+# Insert data in table student_audience
+
+insert into student_audience (student_id, audience_id) values (1, 3);
+insert into student_audience (student_id, audience_id) values (1, 4);
+insert into student_audience (student_id, audience_id) values (1, 2);
+insert into student_audience (student_id, audience_id) values (2, 3);
+insert into student_audience (student_id, audience_id) values (2, 4);
+insert into student_audience (student_id, audience_id) values (3, 1);
+insert into student_audience (student_id, audience_id) values (4, 3);
+insert into student_audience (student_id, audience_id) values (4, 1);
+insert into student_audience (student_id, audience_id) values (5, 3);
+insert into student_audience (student_id, audience_id) values (5, 4);
+
+
+
+
