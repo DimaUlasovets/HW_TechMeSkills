@@ -1,0 +1,111 @@
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Task-1 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# create table Library:
+
+create table library (id serial primary key, 
+                        library_name varchar(50), 
+                        time_start time, 
+                        time_end time, 
+                        address varchar(50), 
+                        phone_number varchar(50));
+
+
+# create table indification_number:
+
+create table indification_number (id serial primary key, 
+                                    index integer not null);
+
+
+# create table publishing_house:
+
+create table publishing_house (id serial primary key, 
+                                name varchar(50), 
+                                address varchar(50));
+
+
+# create table autor:
+
+create table autor (id serial primary key, 
+                    first_name varchar(50), 
+                    last_name varchar(50), 
+                    age date, sex varchar(1), 
+                    indification_num_id integer,
+                    unique(indification_num_id), 
+                    foreign key (indification_num_id) references indification_number(id) on delete cascade on update cascade);
+
+
+# create table book:
+
+create table book (id serial primary key,
+                    book_name varchar(50),
+                    book_year date,
+                    autor_id integer,
+                    publishing_id integer,
+                    foreign key (autor_id) references autor(id) on delete cascade,
+                    foreign key (publishing_id) references publishing_house(id) on delete cascade);
+
+
+# create table book__library:
+
+create table book__library(library_id integer,
+                            book_id integer,
+                            primary key (library_id, book_id),
+                            foreign key (library_id) references library(id) on delete cascade,
+                            foreign key (book_id) references book(id) on delete cascade);
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Task-2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Inner Join:
+
+select first_name, last_name, age, sex, i.index, b.book_name, b.book_year, p.name, p.address from autor
+join indification_number as i
+on autor.indification_num_id = i.id
+join book as b
+on autor.id = b.autor_id
+join publishing_house as p
+on b.publishing_id = p.id;
+
+# Left Join
+
+select first_name, last_name, age, sex, i.index, b.book_name, b.book_year, p.name, p.address from autor
+left join book as b
+on autor.id = b.autor_id
+left join indification_number as i
+on autor.indification_num_id = i.id
+left join publishing_house as p
+on b.publishing_id = p.id;
+
+# Right Join
+
+select first_name, last_name, age, sex, i.index, b.book_name, b.book_year, p.name, p.address from autor
+right join book as b
+on autor.id = b.autor_id
+right join indification_number as i
+on autor.indification_num_id = i.id
+right join publishing_house as p
+on b.publishing_id = p.id;
+
+# Full Join
+
+select first_name, last_name, age, sex, i.index, b.book_name, b.book_year, p.name, p.address from autor
+full join book as b
+on autor.id = b.autor_id
+full join indification_number as i
+on autor.indification_num_id = i.id
+full join publishing_house as p
+on b.publishing_id = p.id;
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Task-3 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+select last_name, first_name, age, sex, count(b.id) as book_count from autor
+join book as b 
+on autor.id = b.autor_id
+group by autor.id
+order by book_count desc
+limit 1;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Task-4 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+select book_name from book where id in (select book_id from book__library);
